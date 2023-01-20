@@ -54,7 +54,7 @@ impl BytePacketBuffer {
     }
 
 
-    fn get_range(&mut self,start: usize, len: usize) -> Result<&[u8]> {
+    pub fn get_range(&mut self,start: usize, len: usize) -> Result<&[u8]> {
         if start + len > 512 {
             return  Err(default_error());
         }
@@ -185,6 +185,20 @@ impl BytePacketBuffer {
         }
 
         self.write_u8(0)?;
+
+        Ok(())
+    }
+
+    fn set(&mut self,pos: usize,val: u8) -> Result<()> {
+        self.buf[pos] = val;
+
+        Ok(())
+    }
+
+    pub fn set_u16(&mut self,pos: usize,val: u16) -> Result<()> {
+
+        self.set(pos, (val >> 8) as u8)?;
+        self.set(pos+1,(val & 0xFF) as u8)?;
 
         Ok(())
     }
